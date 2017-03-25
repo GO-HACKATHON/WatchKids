@@ -1,6 +1,7 @@
 package setia.example.com.watchkids.ParentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,15 +31,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import setia.example.com.watchkids.Activity.LoginActivity;
+import setia.example.com.watchkids.Helper.PreferenceManager;
 import setia.example.com.watchkids.R;
 
 public class ParentHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public GoogleMap map;
-    public Circle circle;
-    public Marker marker;
-    public int addLimitMode = 0;
-    public View layoutPutLimit;
+    private GoogleMap map;
+    private Circle circle;
+    private Marker marker;
+    private int addLimitMode = 0;
+    private View layoutPutLimit;
+    private TextView tvNavName;
+    private TextView tvNavRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,13 @@ public class ParentHomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header=navigationView.getHeaderView(0);
+        tvNavName = (TextView)header.findViewById(R.id.tv_nav_name);
+        tvNavRole = (TextView)header.findViewById(R.id.tv_nav_role);
+
+        tvNavName.setText(PreferenceManager.getNama());
+        tvNavRole.setText(PreferenceManager.getRole());
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -157,6 +170,10 @@ public class ParentHomeActivity extends AppCompatActivity
             layoutPutLimit.setVisibility(View.INVISIBLE);
         } else if (id == R.id.nav_put_limit) {
             layoutPutLimit.setVisibility(View.VISIBLE);
+        } else if (id == R.id.nav_logout) {
+            PreferenceManager.logout();
+            startActivity(new Intent(ParentHomeActivity.this, LoginActivity.class));
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

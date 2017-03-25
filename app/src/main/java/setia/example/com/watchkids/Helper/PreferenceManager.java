@@ -50,4 +50,10 @@ public class PreferenceManager {
         editor.putString(KEY_ROLE, role);
         editor.commit();
     }
+
+    public static void logout(){
+        editor = pref.edit();
+        editor.clear();
+        editor.commit();
+    }
 }

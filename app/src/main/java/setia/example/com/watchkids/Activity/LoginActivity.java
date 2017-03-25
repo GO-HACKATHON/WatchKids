@@ -31,6 +31,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        PreferenceManager.loadManager(getApplicationContext());
+        if(PreferenceManager.getRole().equals("parent")){
+            Intent intent = new Intent(LoginActivity.this, ParentHomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
         etUsername = (EditText)findViewById(R.id.et_username);
         etPassword = (EditText)findViewById(R.id.et_password);
         etCode = (EditText)findViewById(R.id.et_code);
@@ -51,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                                 PreferenceManager.setId(response.body().getProfile().get(0).getIdProfile());
                                 PreferenceManager.setNama(response.body().getProfile().get(0).getFirstName() + " " + (response.body().getProfile().get(0).getLastName()));
                                 PreferenceManager.setRole("parent");
-                                startActivity(new Intent(getApplicationContext(), ParentHomeActivity.class));
                                 finish();
+                                startActivity(new Intent(getApplicationContext(), ParentHomeActivity.class));
                             }
                         }
 
