@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "446291677567",
+    "firebase_url": "https://watchkids-fa8ff.firebaseio.com",
+    "project_id": "watchkids-fa8ff",
+    "storage_bucket": "watchkids-fa8ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446291677567:android:1d353e85bb447105",
+        "android_client_info": {
+          "package_name": "setia.example.com.watchkids"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446291677567-sv6gji1fg5mucnprq63ckmhi92lea5bl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "setia.example.com.watchkids",
+            "certificate_hash": "e211dece701f7b5225198878fc7256ffd57c1380"
+          }
+        },
+        {
+          "client_id": "446291677567-ohlad5346i5ga73qeuj1j5akotnhdh8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3ZowzwWDvgDwCGXZZv_pDuZ5vdjeDVzk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "446291677567-ohlad5346i5ga73qeuj1j5akotnhdh8c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
