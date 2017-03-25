@@ -72,7 +72,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                     if (marker != null) {
                         marker.remove();
                     }
-
                     LatLng latLng = new LatLng(arg0.getLatitude(),arg0.getLongitude());
 
                     marker = mMap.addMarker(new MarkerOptions().position(latLng).title("You Are " +

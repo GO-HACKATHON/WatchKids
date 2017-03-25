@@ -20,6 +20,9 @@ public class Respond {
     @SerializedName("profile")
     @Expose
     private List<Profile> profile = null;
+    @SerializedName("data_kids")
+    @Expose
+    private List<Kids> dataKids = null;
 
     public Boolean getError() {
         return error;
@@ -45,4 +48,11 @@ public class Respond {
         this.profile = profile;
     }
 
+    public List<Kids> getDataKids() {
+        return dataKids;
+    }
+
+    public void setDataKids(List<Kids> dataKids) {
+        this.dataKids = dataKids;
+    }
 }

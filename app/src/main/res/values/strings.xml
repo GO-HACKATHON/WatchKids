@@ -22,4 +22,7 @@
     <string name="login_button_login">Login</string>
     <string name="login_button_login_anak">Login sebagai Anak</string>
     <string name="login_tv_login_desc">Atau masuk sebagai anak</string>
+    <string name="title_activity_kids_home">KidsHomeActivity</string>
+
+    <string name="kids_home_btn_panic">PANIC!</string>
 </resources>

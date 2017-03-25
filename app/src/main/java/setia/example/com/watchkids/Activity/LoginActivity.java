@@ -18,6 +18,7 @@ import android.widget.Toast;
 import setia.example.com.watchkids.APIHelper.WatchClient;
 import setia.example.com.watchkids.ParentActivity.ParentHomeActivity;
 import setia.example.com.watchkids.R;
+import setia.example.com.watchkids.SQLHelper.SQLManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         PreferenceManager.loadManager(getApplicationContext());
+        SQLManager.getReady(getApplicationContext());
         if(PreferenceManager.getRole().equals("parent")){
             Intent intent = new Intent(LoginActivity.this, ParentHomeActivity.class);
             startActivity(intent);
@@ -67,6 +69,17 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Tidak terhubung dengan jaringan", Toast.LENGTH_SHORT).show();
                         }
                     });
+                }
+            }
+        });
+
+        btnLoginAnak.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(etCode.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(), "Kolom kode anak kosong", Toast.LENGTH_LONG).show();
+                } else {
+                    WatchClient.get().
                 }
             }
         });

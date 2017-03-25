@@ -6,9 +6,6 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -18,26 +15,30 @@ import android.os.Process;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import setia.example.com.watchkids.ParentActivity.ParentHomeActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import setia.example.com.watchkids.APIHelper.WatchClient;
+import setia.example.com.watchkids.Helper.PreferenceManager;
+import setia.example.com.watchkids.Model.Respond;
+import setia.example.com.watchkids.R;
+import setia.example.com.watchkids.SQLHelper.SQLManager;
 
 /**
  * Created by My Computer on 3/25/2017.
  */
 
 public class ParentGetKidsService extends Service {
-    private static final String TAG = "ParentGetKids";
+    private static final String TAG = "MyService";
     private boolean isRunning = false;
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
     // Handler that receives messages from the thread
-    private final class ServiceHandler extends Handler implements LocationListener{
-        private Location mLocation;
-
+    private final class ServiceHandler extends Handler {
         public ServiceHandler(Looper looper) {
             super(looper);
         }
-
         @Override
         public void handleMessage(Message msg) {
             // Normally we would do some work here, like download a file.
@@ -46,33 +47,28 @@ public class ParentGetKidsService extends Service {
             while (isRunning) {
                 synchronized (this) {
                     try {
-                        wait(5 * 1000);
+                        wait(5*1000);
+                        WatchClient.get().getKidsLocation(PreferenceManager.getId()).enqueue(new retrofit2.Callback<Respond>() {
+                            @Override
+                            public void onResponse(Call<Respond> call, Response<Respond> response) {
+                                if(response.body().getError().equals(false)){
+                                    SQLManager.openKC();
+                                    SQLManager.updateDataKC(response.body().getDataKids());
+                                    SQLManager.closeKC();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Respond> call, Throwable t) {
+                                Toast.makeText(getApplicationContext(), "Tidak terhubung dengan jaringan", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } catch (Exception e) {
                     }
                 }
             }
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
         }
     }
 
@@ -117,26 +113,4 @@ public class ParentGetKidsService extends Service {
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
     }
 
-    public void giveNotification(String message) {
-        //Setting notification yang ingin ditampilkan
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setContentTitle("WizWaz")
-                        .setContentText(message)
-                        .setAutoCancel(true) //menghilangkan notifikasi ketika notifikasi di tekan
-                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-        // Membuat intent yang dituju ketika notifikasi ditekan
-        Intent resultIntent = new Intent(this, ParentHomeActivity.class);
-        // objek stack builder digunakan untuk memastikan ketika back ditekan dari, aplikasi anda akan menuju homescreen
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(ParentHomeActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager)
-                        getSystemService(Context.NOTIFICATION_SERVICE);
-        // 101 adalah ID notifikasi, digunakan jika kita ingin mengupdate notifikasi.
-        mNotificationManager.notify(101, mBuilder.build());
-    }
 }

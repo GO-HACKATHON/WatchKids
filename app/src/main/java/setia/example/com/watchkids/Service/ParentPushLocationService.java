@@ -20,7 +20,7 @@ import setia.example.com.watchkids.Model.Respond;
  * Created by My Computer on 3/25/2017.
  */
 
-public class MyService extends Service
+public class ParentPushLocationService extends Service
 {
     private static final String TAG = "BOOMBOOMTESTGPS";
     private LocationManager mLocationManager = null;

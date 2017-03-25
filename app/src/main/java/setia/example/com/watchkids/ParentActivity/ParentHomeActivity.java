@@ -4,12 +4,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.text.Layout;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,12 +15,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.Circle;
@@ -31,12 +27,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import setia.example.com.watchkids.APIHelper.WatchClient;
 import setia.example.com.watchkids.Activity.LoginActivity;
 import setia.example.com.watchkids.Helper.PreferenceManager;
+import setia.example.com.watchkids.Model.Kids;
+import setia.example.com.watchkids.Model.Respond;
 import setia.example.com.watchkids.R;
-import setia.example.com.watchkids.Service.GPSTracker;
-import setia.example.com.watchkids.Service.MyService;
-import setia.example.com.watchkids.Service.ParentGetKidsService;
+import setia.example.com.watchkids.SQLHelper.SQLManager;
+import setia.example.com.watchkids.Service.ParentPushLocationService;
 
 public class ParentHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +50,7 @@ public class ParentHomeActivity extends AppCompatActivity
     private View layoutPutLimit;
     private TextView tvNavName;
     private TextView tvNavRole;
+    private int onScreen = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +78,33 @@ public class ParentHomeActivity extends AppCompatActivity
         tvNavName.setText(PreferenceManager.getNama());
         tvNavRole.setText(PreferenceManager.getRole());
 
-        startService(new Intent(ParentHomeActivity.this, MyService.class));
+        WatchClient.get().getAllKids(PreferenceManager.getId()).enqueue(new Callback<Respond>() {
+            @Override
+            public void onResponse(Call<Respond> call, Response<Respond> response) {
+                if(response.body().getError().equals(false)){
+                    SQLManager.openKC();
+                    SQLManager.deleteDataKC();
+                    Log.d("coba", response.body().toString());
+                    SQLManager.insertDataKC(response.body().getDataKids());
+                    SQLManager.closeKC();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Respond> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Tidak terhubung dengan jaringan", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        }, 2000);//delay 2 detik
+    }
+
+    public void init(){startService(new Intent(ParentHomeActivity.this, ParentPushLocationService.class));
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -92,6 +122,7 @@ public class ParentHomeActivity extends AppCompatActivity
         map.setMyLocationEnabled(true);
 
         if (map != null) {
+            startTimerThread();
 //            map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 //                @Override
 //                public void onMyLocationChange(Location arg0) {
@@ -184,5 +215,33 @@ public class ParentHomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void startTimerThread() {
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            private long startTime = System.currentTimeMillis();
+            public void run() {
+                while (onScreen == 1) {
+                    try {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.post(new Runnable(){
+                        public void run() {
+                            SQLManager.openKC();
+                            List<Kids> listKids = SQLManager.getDataKC();
+                            SQLManager.closeKC();
+                            for(int loop = 0; loop < listKids.size(); loop++){
+                                marker = map.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(listKids.get(loop).getLatitude()),Double.valueOf(listKids.get(loop).getLongitude()))).title(listKids.get(loop).getFirstName()));
+                            }
+                        }
+                    });
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 }

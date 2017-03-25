@@ -14,9 +14,17 @@ public interface WatchAPI {
     @GET("getLogin/{username}/{password}")
     Call<Respond> Login(@Path("username") String username, @Path("password") String password);
 
+    @GET("loginKids/{code}")
+    Call<Respond> LoginKids(@Path("code") String code);
+
     @GET("updateLocationParent/{id}/{latitude}/{longitude}")
     Call<Respond> UpdateLocationParent(@Path("id") String id, @Path("latitude") String latitude, @Path("longitude") String longitude);
 
+    @GET("getKidsLocationByProfileId/{id}")
+    Call<Respond> getKidsLocation(@Path("id") String id);
+
+    @GET("getAllKidsByProfileId/{id}")
+    Call<Respond> getAllKids(@Path("id") String id);
 //    @GET("contacts.json")
 //    Call<List<Contact>> ContactsList();
 //
