@@ -20,11 +20,20 @@ public interface WatchAPI {
     @GET("updateLocationParent/{id}/{latitude}/{longitude}")
     Call<Respond> UpdateLocationParent(@Path("id") String id, @Path("latitude") String latitude, @Path("longitude") String longitude);
 
+    @GET("updateLocationKids/{id}/{latitude}/{longitude}/{updated_at}")
+    Call<Respond> UpdateLocationKids(@Path("id") String id, @Path("latitude") String latitude, @Path("longitude") String longitude, @Path("updated_at") String updatedAt);
+
     @GET("getKidsLocationByProfileId/{id}")
     Call<Respond> getKidsLocation(@Path("id") String id);
 
     @GET("getAllKidsByProfileId/{id}")
     Call<Respond> getAllKids(@Path("id") String id);
+
+    @GET("getAturanByKidsId/{id}")
+    Call<Respond> getLimitKids(@Path("id") String id);
+
+    @GET("createAturan/{parent_id}/{kids_id}/{start_time}/{end_time}/{latitude}/{longitude}")
+    Call<Respond> CreateLimit(@Path("parent_id") String parentId, @Path("kids_id") String kidsId, @Path("start_time") String startTime, @Path("end_time") String endTime, @Path("latitude") String latitude, @Path("longitude") String longitude);
 //    @GET("contacts.json")
 //    Call<List<Contact>> ContactsList();
 //

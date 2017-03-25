@@ -1,6 +1,7 @@
 package setia.example.com.watchkids.Activity;
 
 import setia.example.com.watchkids.Helper.PreferenceManager;
+import setia.example.com.watchkids.KidsActivity.KidsHomeActivity;
 import setia.example.com.watchkids.Model.Respond;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -10,6 +11,7 @@ import retrofit2.Callback;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +38,10 @@ public class LoginActivity extends AppCompatActivity {
         SQLManager.getReady(getApplicationContext());
         if(PreferenceManager.getRole().equals("parent")){
             Intent intent = new Intent(LoginActivity.this, ParentHomeActivity.class);
+            startActivity(intent);
+            finish();
+        } else if(PreferenceManager.getRole().equals("kids")){
+            Intent intent = new Intent(LoginActivity.this, KidsHomeActivity.class);
             startActivity(intent);
             finish();
         }
@@ -76,10 +82,34 @@ public class LoginActivity extends AppCompatActivity {
         btnLoginAnak.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), etCode.getText().toString(), Toast.LENGTH_SHORT).show();
                 if(etCode.getText().toString().equals("")){
                     Toast.makeText(getApplicationContext(), "Kolom kode anak kosong", Toast.LENGTH_LONG).show();
                 } else {
-                    WatchClient.get().
+                    WatchClient.get().LoginKids(etCode.getText().toString()).enqueue(new Callback<Respond>() {
+                        @Override
+                        public void onResponse(Call<Respond> call, Response<Respond> response) {
+                        //    Log.d("coba", response.body().getDataKids().get(0).getId());
+                            Log.d("coba2", "test");
+                            if(response.body().getError().equals(true)){
+                                Log.d("cobaGetText" ,etCode.getText().toString());
+                                Toast.makeText(getApplicationContext(), "Kode anak tidak ditemukan", Toast.LENGTH_LONG).show();
+                            }else{
+//                                PreferenceManager.setId(response.body().getDataKids().get(0).getId());
+//                                PreferenceManager.setNama(response.body().getDataKids().get(0).getFirstName() + " " + (response.body().getDataKids().get(0).getLastName()));
+//                                PreferenceManager.setRole("kids");
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), KidsHomeActivity.class));
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Respond> call, Throwable t) {
+                            Log.d("coba", t.getMessage());
+                            Toast.makeText(getApplicationContext(), "Tidak terhubung dengan jaringan" + t.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });

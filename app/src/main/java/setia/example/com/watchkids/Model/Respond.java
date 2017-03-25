@@ -23,6 +23,9 @@ public class Respond {
     @SerializedName("data_kids")
     @Expose
     private List<Kids> dataKids = null;
+    @SerializedName("data_limit")
+    @Expose
+    private List<DataLimit> dataLimit = null;
 
     public Boolean getError() {
         return error;
@@ -54,5 +57,13 @@ public class Respond {
 
     public void setDataKids(List<Kids> dataKids) {
         this.dataKids = dataKids;
+    }
+
+    public List<DataLimit> getDataLimit() {
+        return dataLimit;
+    }
+
+    public void setDataLimit(List<DataLimit> dataLimit) {
+        this.dataLimit = dataLimit;
     }
 }

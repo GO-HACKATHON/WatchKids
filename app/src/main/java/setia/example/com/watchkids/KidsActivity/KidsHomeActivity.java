@@ -16,8 +16,10 @@ import android.view.MenuItem;
 
 import setia.example.com.watchkids.Activity.LoginActivity;
 import setia.example.com.watchkids.Helper.PreferenceManager;
+import setia.example.com.watchkids.Model.Kids;
 import setia.example.com.watchkids.ParentActivity.ParentHomeActivity;
 import setia.example.com.watchkids.R;
+import setia.example.com.watchkids.Service.KidsPushLocationService;
 
 public class KidsHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,6 +39,8 @@ public class KidsHomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        startService(new Intent(KidsHomeActivity.this, KidsPushLocationService.class));
     }
 
     @Override

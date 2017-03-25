@@ -1,6 +1,7 @@
 package setia.example.com.watchkids.ParentActivity;
 
 import android.Manifest;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,17 +17,26 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -39,6 +49,7 @@ import setia.example.com.watchkids.Model.Kids;
 import setia.example.com.watchkids.Model.Respond;
 import setia.example.com.watchkids.R;
 import setia.example.com.watchkids.SQLHelper.SQLManager;
+import setia.example.com.watchkids.Service.ParentGetKidsService;
 import setia.example.com.watchkids.Service.ParentPushLocationService;
 
 public class ParentHomeActivity extends AppCompatActivity
@@ -46,10 +57,21 @@ public class ParentHomeActivity extends AppCompatActivity
     private GoogleMap map;
     private Circle circle;
     private Marker marker;
+    private ArrayList<Marker> markerKids = new ArrayList<Marker>();
     private int addLimitMode = 0;
     private View layoutPutLimit;
     private TextView tvNavName;
     private TextView tvNavRole;
+    private TextView tvStart;
+    private Spinner kidsSpinner;
+    private Button btnCreateLimit;
+    private EditText etDuration;
+    private int mSelectedHour;
+    private int mSelectedMinute;
+    private int loop;
+    private HashMap<String, LatLng> limitKids = new HashMap<String, LatLng>();
+    private ArrayList<Kids> listKids = new ArrayList<Kids>();
+    //private List<String> kidsName = new ArrayList<String>();
     private int onScreen = 1;
 
     @Override
@@ -61,6 +83,21 @@ public class ParentHomeActivity extends AppCompatActivity
 
         layoutPutLimit = findViewById(R.id.layout_put_limit);
         layoutPutLimit.setVisibility(View.INVISIBLE);
+
+//        kidsSpinner = (Spinner)findViewById(R.id.kidsSpinner);
+//
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kidsName);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        // attaching data adapter to spinner
+//        kidsSpinner.setAdapter(dataAdapter);
+//
+//        SQLManager.openKC();
+//        List<Kids> listKids = SQLManager.getDataKC();
+//        for(int loop = 0; loop < listKids.size(); loop++){
+//            kidsName.add(listKids.get(loop).getFirstName() + " " + listKids.get(loop).getLastName());
+//        }
+//        SQLManager.closeKC();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -74,6 +111,57 @@ public class ParentHomeActivity extends AppCompatActivity
         View header=navigationView.getHeaderView(0);
         tvNavName = (TextView)header.findViewById(R.id.tv_nav_name);
         tvNavRole = (TextView)header.findViewById(R.id.tv_nav_role);
+        tvStart = (TextView)findViewById(R.id.tv_start);
+        btnCreateLimit = (Button)findViewById(R.id.btn_create_limit);
+        etDuration = (EditText)findViewById(R.id.et_duration);
+
+        tvStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(ParentHomeActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        tvStart.setText( selectedHour + ":" + selectedMinute);
+                        mSelectedHour = selectedHour;
+                        mSelectedMinute = selectedMinute;
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Select Start Time");
+                mTimePicker.show();
+            }
+        });
+
+        btnCreateLimit.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(etDuration.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(), "Durasi masih kosong", Toast.LENGTH_SHORT).show();
+                } else {
+                    int duration = mSelectedHour + Integer.valueOf(etDuration.getText().toString());
+                    WatchClient.get().CreateLimit(PreferenceManager.getId(), String.valueOf(3), tvStart.getText().toString(), duration + "" + mSelectedMinute, String.valueOf(marker.getPosition().latitude), String.valueOf(marker.getPosition().longitude)).enqueue(new Callback<Respond>() {
+                        @Override
+                        public void onResponse(Call<Respond> call, Response<Respond> response) {
+                            if(response.body().getError().equals(false)){
+                                Toast.makeText(getApplicationContext(), "Berhasil membuat aturan", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(ParentHomeActivity.this, ParentHomeActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Gagal membuat aturan", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Respond> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), "Tidak terhubung dengan jaringan", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
 
         tvNavName.setText(PreferenceManager.getNama());
         tvNavRole.setText(PreferenceManager.getRole());
@@ -104,7 +192,9 @@ public class ParentHomeActivity extends AppCompatActivity
         }, 2000);//delay 2 detik
     }
 
-    public void init(){startService(new Intent(ParentHomeActivity.this, ParentPushLocationService.class));
+    public void init(){
+        startService(new Intent(ParentHomeActivity.this, ParentPushLocationService.class));
+        startService(new Intent(ParentHomeActivity.this, ParentGetKidsService.class));
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -157,7 +247,7 @@ public class ParentHomeActivity extends AppCompatActivity
                                 .center(latLng)
                                 .radius(1000)
                                 .strokeColor(Color.BLACK));
-                        marker = map.addMarker(new MarkerOptions().position(latLng).title(""));
+                        marker = map.addMarker(new MarkerOptions().position(latLng).title("").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                     }
                 }
             });
@@ -205,6 +295,7 @@ public class ParentHomeActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             layoutPutLimit.setVisibility(View.INVISIBLE);
         } else if (id == R.id.nav_put_limit) {
+            addLimitMode = 1;
             layoutPutLimit.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_logout) {
             PreferenceManager.logout();
@@ -232,10 +323,31 @@ public class ParentHomeActivity extends AppCompatActivity
                     handler.post(new Runnable(){
                         public void run() {
                             SQLManager.openKC();
-                            List<Kids> listKids = SQLManager.getDataKC();
+                            listKids = (ArrayList<Kids>) SQLManager.getDataKC();
                             SQLManager.closeKC();
-                            for(int loop = 0; loop < listKids.size(); loop++){
-                                marker = map.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(listKids.get(loop).getLatitude()),Double.valueOf(listKids.get(loop).getLongitude()))).title(listKids.get(loop).getFirstName()));
+                            for(loop = 0; loop < listKids.size(); loop++){
+                                if(markerKids.size() < listKids.size()){
+                                    markerKids.add(loop, map.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(listKids.get(loop).getLatitude()),Double.valueOf(listKids.get(loop).getLongitude()))).title(listKids.get(loop).getFirstName())));
+                                    WatchClient.get().getLimitKids(listKids.get(loop).getId()).enqueue(new Callback<Respond>() {
+                                        @Override
+                                        public void onResponse(Call<Respond> call, Response<Respond> response) {
+                                            if(response.body().getError().equals(false)){
+                                                limitKids.put(listKids.get(loop).getId(), new LatLng(Double.valueOf(response.body().getDataLimit().get(0).getLatitude()), Double.valueOf(response.body().getDataLimit().get(0).getLongitude())));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Respond> call, Throwable t) {
+
+                                        }
+                                    });
+                                } else {
+                                    markerKids.get(loop).remove();
+                                    markerKids.set(loop, map.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(listKids.get(loop).getLatitude()),Double.valueOf(listKids.get(loop).getLongitude()))).title(listKids.get(loop).getFirstName())));
+                                    if(limitKids.containsKey(listKids.get(loop).getId())){
+
+                                    }
+                                }
                             }
                         }
                     });

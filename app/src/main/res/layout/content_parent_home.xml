@@ -40,23 +40,35 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <TextView
+                        android:text="Start"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-                    
+                    <TextView
+                        android:id="@+id/tv_start"
+                        android:text="00:00"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:text="Duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/et_duration"
+                        android:hint="1 (Jam)"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
-            <TextView
-                android:id="@+id/tv_radius"
+            <Button
+                android:id="@+id/btn_create_limit"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/parent_home_tv_radius"/>
-            <EditText
-                android:id="@+id/et_radius"
-                android:inputType="number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#d3d3d3"
-                android:hint="@string/parent_home_hint_radius"/>
+                android:layout_height="wrap_content" />
     </LinearLayout>
 
 </RelativeLayout>
