@@ -2,6 +2,7 @@ package setia.example.com.watchkids.APIHelper;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import setia.example.com.watchkids.Model.Respond;
 
@@ -12,6 +13,10 @@ import setia.example.com.watchkids.Model.Respond;
 public interface WatchAPI {
     @GET("getLogin/{username}/{password}")
     Call<Respond> Login(@Path("username") String username, @Path("password") String password);
+
+    @GET("updateLocationParent/{id}/{latitude}/{longitude}")
+    Call<Respond> UpdateLocationParent(@Path("id") String id, @Path("latitude") String latitude, @Path("longitude") String longitude);
+
 //    @GET("contacts.json")
 //    Call<List<Contact>> ContactsList();
 //

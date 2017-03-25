@@ -34,6 +34,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import setia.example.com.watchkids.Activity.LoginActivity;
 import setia.example.com.watchkids.Helper.PreferenceManager;
 import setia.example.com.watchkids.R;
+import setia.example.com.watchkids.Service.GPSTracker;
+import setia.example.com.watchkids.Service.MyService;
+import setia.example.com.watchkids.Service.ParentGetKidsService;
 
 public class ParentHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,6 +73,8 @@ public class ParentHomeActivity extends AppCompatActivity
 
         tvNavName.setText(PreferenceManager.getNama());
         tvNavRole.setText(PreferenceManager.getRole());
+
+        startService(new Intent(ParentHomeActivity.this, MyService.class));
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
                 .getMap();

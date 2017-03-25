@@ -60,6 +60,15 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <service
+            android:name=".Service.ParentGetKidsService"
+            android:exported="false" />
+        <service
+            android:name=".Service.GPSTracker"
+            android:exported="false" />
+        <service
+            android:name=".Service.MyService"
+            android:exported="false" />
     </application>
 
 </manifest>
