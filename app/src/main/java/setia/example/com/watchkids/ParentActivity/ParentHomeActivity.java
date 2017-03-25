@@ -1,13 +1,18 @@
 package setia.example.com.watchkids.ParentActivity;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -33,7 +38,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -69,6 +76,7 @@ public class ParentHomeActivity extends AppCompatActivity
     private int mSelectedHour;
     private int mSelectedMinute;
     private int loop;
+    private int alerted = 0;
     private HashMap<String, LatLng> limitKids = new HashMap<String, LatLng>();
     private ArrayList<Kids> listKids = new ArrayList<Kids>();
     //private List<String> kidsName = new ArrayList<String>();
@@ -308,6 +316,30 @@ public class ParentHomeActivity extends AppCompatActivity
         return true;
     }
 
+    private void giveNotification(String message) {
+        //Setting notification yang ingin ditampilkan
+        alerted = 1;
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_menu_camera)
+                        .setContentTitle("Anak Anda Melewati Batas")
+                        .setContentText(message)
+                        .setVibrate(new long[]{ 1000, 1000, 1000, 1000, 1000});
+        // Membuat intent yang dituju ketika notifikasi ditekan
+        Intent resultIntent = new Intent(this, ParentHomeActivity.class);
+        // objek stack builder digunakan untuk memastikan ketika back ditekan dari, aplikasi anda akan menuju homescreen
+        TaskStackBuilder stackBuilder = TaskStackBuilder. create(this);
+        stackBuilder.addParentStack(ParentHomeActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent. FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager)
+                        getSystemService(Context. NOTIFICATION_SERVICE);
+        // 101 adalah ID notifikasi, digunakan jika kita ingin mengupdate notifikasi.
+        mNotificationManager.notify(101, mBuilder.build());
+    }
+
     private void startTimerThread() {
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -332,7 +364,7 @@ public class ParentHomeActivity extends AppCompatActivity
                                         @Override
                                         public void onResponse(Call<Respond> call, Response<Respond> response) {
                                             if(response.body().getError().equals(false)){
-                                                limitKids.put(listKids.get(loop).getId(), new LatLng(Double.valueOf(response.body().getDataLimit().get(0).getLatitude()), Double.valueOf(response.body().getDataLimit().get(0).getLongitude())));
+                                                limitKids.put(response.body().getDataLimit().get(0).getKidsId(), new LatLng(Double.valueOf(response.body().getDataLimit().get(0).getLatitude()), Double.valueOf(response.body().getDataLimit().get(0).getLongitude())));
                                             }
                                         }
 
@@ -345,7 +377,14 @@ public class ParentHomeActivity extends AppCompatActivity
                                     markerKids.get(loop).remove();
                                     markerKids.set(loop, map.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(listKids.get(loop).getLatitude()),Double.valueOf(listKids.get(loop).getLongitude()))).title(listKids.get(loop).getFirstName())));
                                     if(limitKids.containsKey(listKids.get(loop).getId())){
-
+                                        double temp = SphericalUtil.computeDistanceBetween(markerKids.get(loop).getPosition(), limitKids.get(listKids.get(loop).getId()));
+                                        if(temp > 1000){
+                                            //Toast.makeText(ParentHomeActivity.this, temp + " " + alerted, Toast.LENGTH_SHORT).show();
+                                            if(alerted == 0){
+                                                temp = Math.floor(temp * 100) / 100000;
+                                                giveNotification("Anak anda berada " + temp + " kilometer dari posisi yang anda tentukan");
+                                            }
+                                        }
                                     }
                                 }
                             }
