@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WatchClient {
     private static WatchAPI REST_CLIENT;
-    private static String URL= "http://watchkids.setiasimaremare.com/index.php/";
+    private static String URL= "http://wkidsapi.azurewebsites.net/index.php/";
     static { //dieksekusi sebelum constructor, tapi hanya sekali untuk semua instans
         setupRestClient();
     }

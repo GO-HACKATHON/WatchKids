@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.text.Layout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,9 +33,11 @@ import setia.example.com.watchkids.R;
 
 public class ParentHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    GoogleMap map;
-    Circle circle;
-    Marker marker;
+    public GoogleMap map;
+    public Circle circle;
+    public Marker marker;
+    public int addLimitMode = 0;
+    public View layoutPutLimit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,9 @@ public class ParentHomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_parent_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        layoutPutLimit = findViewById(R.id.layout_put_limit);
+        layoutPutLimit.setVisibility(View.INVISIBLE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -91,17 +97,19 @@ public class ParentHomeActivity extends AppCompatActivity
             map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
-                    if(circle != null){
-                        circle.remove();
+                    if(addLimitMode == 1){
+                        if(circle != null){
+                            circle.remove();
+                        }
+                        if (marker != null) {
+                            marker.remove();
+                        }
+                        circle = map.addCircle(new CircleOptions()
+                                .center(latLng)
+                                .radius(1000)
+                                .strokeColor(Color.BLACK));
+                        marker = map.addMarker(new MarkerOptions().position(latLng).title(""));
                     }
-                    if (marker != null) {
-                        marker.remove();
-                    }
-                    circle = map.addCircle(new CircleOptions()
-                            .center(latLng)
-                            .radius(1000)
-                            .strokeColor(Color.BLACK));
-                    marker = map.addMarker(new MarkerOptions().position(latLng).title(""));
                 }
             });
         }
@@ -117,27 +125,27 @@ public class ParentHomeActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.parent_home, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.parent_home, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -145,18 +153,10 @@ public class ParentHomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_home) {
+            layoutPutLimit.setVisibility(View.INVISIBLE);
+        } else if (id == R.id.nav_put_limit) {
+            layoutPutLimit.setVisibility(View.VISIBLE);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

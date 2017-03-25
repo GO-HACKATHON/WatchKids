@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import setia.example.com.watchkids.Helper.PreferenceManager;
 import setia.example.com.watchkids.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -16,6 +17,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                PreferenceManager.loadManager(getApplicationContext());
                 final Intent mainIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(mainIntent);
                 finish();

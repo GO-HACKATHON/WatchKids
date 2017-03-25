@@ -9,4 +9,16 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_menu_home">Home</string>
+    <string name="nav_menu_put_limit">Atur Lokasi Anak</string>
+
+    <string name="parent_home_tv_radius">Radius :  </string>
+    <string name="parent_home_hint_radius">1 (Km)</string>
+
+    <string name="login_hint_username">username</string>
+    <string name="login_hint_password">password</string>
+    <string name="login_hint_code">kode anak</string>
+    <string name="login_button_login">Login</string>
+    <string name="login_button_login_anak">Login sebagai Anak</string>
+    <string name="login_tv_login_desc">Atau masuk sebagai anak</string>
 </resources>

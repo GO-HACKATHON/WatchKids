@@ -1,18 +1,17 @@
 package setia.example.com.watchkids.APIHelper;
 
-import okhttp3.RequestBody;
-import retrofit2.http.Body;
+import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
+import setia.example.com.watchkids.Model.Respond;
 
 /**
  * Created by My Computer on 3/25/2017.
  */
 
 public interface WatchAPI {
+    @GET("getLogin/{username}/{password}")
+    Call<Respond> Login(@Path("username") String username, @Path("password") String password);
 //    @GET("contacts.json")
 //    Call<List<Contact>> ContactsList();
 //
