@@ -16,6 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import setia.example.com.watchkids.Helper.GetAddressTask;
+
 public class HomeActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
