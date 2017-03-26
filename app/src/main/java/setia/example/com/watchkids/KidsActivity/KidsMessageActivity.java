@@ -38,7 +38,7 @@ public class KidsMessageActivity extends AppCompatActivity {
                     public void onResponse(Call<Respond> call, Response<Respond> response) {
                         if(response.body().getError().equals(false)){
                             Toast.makeText(getApplicationContext(), "Pesan Terkirim", Toast.LENGTH_SHORT).show();
-
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Gagal Mengirim Pesan", Toast.LENGTH_SHORT).show();
                         }

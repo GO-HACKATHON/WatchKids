@@ -117,7 +117,7 @@ public class KidsHomeActivity extends AppCompatActivity
                         limitMarker = map.addMarker(new MarkerOptions().position(latLng).title("Batas Anda").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
                         Circle circle = map.addCircle(new CircleOptions()
                                 .center(latLng)
-                                .radius(1000)
+                                .radius(100)
                                 .strokeColor(Color.BLACK));
                     }
                 }
@@ -170,7 +170,6 @@ public class KidsHomeActivity extends AppCompatActivity
             finish();
         } else if(id == R.id.nav_message) {
             startActivity(new Intent(KidsHomeActivity.this,KidsMessageActivity.class ));
-            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -234,7 +234,7 @@ public class ParentHomeActivity extends AppCompatActivity
                         }
                         circle = map.addCircle(new CircleOptions()
                                 .center(latLng)
-                                .radius(1000)
+                                .radius(100)
                                 .strokeColor(Color.BLACK));
                         marker = map.addMarker(new MarkerOptions().position(latLng).title("").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                     }
@@ -385,7 +385,7 @@ public class ParentHomeActivity extends AppCompatActivity
                                     markerKids.set(loop, map.addMarker(new MarkerOptions().position(new LatLng(Double.valueOf(listKids.get(loop).getLatitude()),Double.valueOf(listKids.get(loop).getLongitude()))).title(listKids.get(loop).getFirstName())));
                                     if(limitKids.containsKey(listKids.get(loop).getId())){
                                         double temp = SphericalUtil.computeDistanceBetween(markerKids.get(loop).getPosition(), limitKids.get(listKids.get(loop).getId()));
-                                        if(temp > 1000){
+                                        if(temp > 100){
                                             //Toast.makeText(ParentHomeActivity.this, temp + " " + alerted, Toast.LENGTH_SHORT).show();
                                             if(alerted == 0){
                                                 temp = Math.floor(temp * 100) / 100000;

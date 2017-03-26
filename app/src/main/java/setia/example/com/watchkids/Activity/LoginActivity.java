@@ -82,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLoginAnak.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), etCode.getText().toString(), Toast.LENGTH_SHORT).show();
                 if(etCode.getText().toString().equals("")){
                     Toast.makeText(getApplicationContext(), "Kolom kode anak kosong", Toast.LENGTH_LONG).show();
                 } else {
