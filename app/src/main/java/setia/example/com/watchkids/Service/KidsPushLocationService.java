@@ -40,8 +40,9 @@ public class KidsPushLocationService extends Service {
         @Override
         public void onLocationChanged(Location location) {
             Log.e(TAG, "onLocationChanged: " + location);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String currentDateandTime = sdf.format(new Date());
+            Log.d("coba", "berhasil" + currentDateandTime);
             WatchClient.get().UpdateLocationKids(PreferenceManager.getId(), String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), currentDateandTime).enqueue(new Callback<Respond>() {
                 @Override
                 public void onResponse(Call<Respond> call, Response<Respond> response) {

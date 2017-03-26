@@ -15,6 +15,8 @@ public class PreferenceManager {
     private final static String KEY_ID = "id";
     private final static String KEY_NAMA = "nama";
     private final static String KEY_ROLE = "role";
+    private final static String KEY_PARENT_LATITUDE = "parent_latitude";
+    private final static String KEY_PARENT_LONGITUDE = "parent_longitude";
 
     public static void loadManager(Context context){
         contextManager = context;
@@ -48,6 +50,26 @@ public class PreferenceManager {
     public static void setRole(String role) {
         editor = pref.edit();
         editor.putString(KEY_ROLE, role);
+        editor.commit();
+    }
+
+    public static String getParentLatitude() {
+        return pref.getString(KEY_PARENT_LATITUDE, "-");
+    }
+
+    public static void setParentLatitude(String role) {
+        editor = pref.edit();
+        editor.putString(KEY_PARENT_LATITUDE, role);
+        editor.commit();
+    }
+
+    public static String getParentLongitude() {
+        return pref.getString(KEY_PARENT_LONGITUDE, "-");
+    }
+
+    public static void setParentLongitude(String role) {
+        editor = pref.edit();
+        editor.putString(KEY_PARENT_LONGITUDE, role);
         editor.commit();
     }
 

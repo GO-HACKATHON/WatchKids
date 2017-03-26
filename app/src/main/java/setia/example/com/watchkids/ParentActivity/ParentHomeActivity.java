@@ -221,25 +221,6 @@ public class ParentHomeActivity extends AppCompatActivity
 
         if (map != null) {
             startTimerThread();
-//            map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-//                @Override
-//                public void onMyLocationChange(Location arg0) {
-//                    // TODO Auto-generated method stub
-//                    if (marker != null) {
-//                        marker.remove();
-//                    }
-//
-//                    LatLng latLng = new LatLng(arg0.getLatitude(),arg0.getLongitude());
-//
-//                    marker = map.addMarker(new MarkerOptions().position(latLng).title(""));
-//                    circle = map.addCircle(new CircleOptions()
-//                            .center(latLng)
-//                            .radius(100)
-//                            .strokeColor(Color.BLACK));
-//                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
-//                    map.animateCamera(cameraUpdate);
-//                }
-//            });
 
             map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
@@ -272,28 +253,6 @@ public class ParentHomeActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.parent_home, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -318,7 +277,6 @@ public class ParentHomeActivity extends AppCompatActivity
 
     private void giveNotification(String message) {
         //Setting notification yang ingin ditampilkan
-        alerted = 1;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_menu_camera)
@@ -340,6 +298,51 @@ public class ParentHomeActivity extends AppCompatActivity
         mNotificationManager.notify(101, mBuilder.build());
     }
 
+    private void giveNotification2(String message) {
+        //Setting notification yang ingin ditampilkan
+        NotificationCompat.Builder mBuilders =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_menu_camera)
+                        .setContentTitle("Anak Anda Menekan Panic Button!")
+                        .setContentText(message)
+                        .setVibrate(new long[]{ 1000, 1000, 1000, 1000, 1000});
+        // Membuat intent yang dituju ketika notifikasi ditekan
+        Intent resultIntent = new Intent(this, ParentHomeActivity.class);
+        // objek stack builder digunakan untuk memastikan ketika back ditekan dari, aplikasi anda akan menuju homescreen
+        TaskStackBuilder stackBuilder = TaskStackBuilder. create(this);
+        stackBuilder.addParentStack(ParentHomeActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent. FLAG_UPDATE_CURRENT);
+        mBuilders.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager)
+                        getSystemService(Context. NOTIFICATION_SERVICE);
+        // 101 adalah ID notifikasi, digunakan jika kita ingin mengupdate notifikasi.
+        mNotificationManager.notify(101, mBuilders.build());
+    }
+    private void cekPanics(){
+        WatchClient.get().getAllKids(PreferenceManager.getId()).enqueue(new Callback<Respond>() {
+            @Override
+            public void onResponse(Call<Respond> call, Response<Respond> response) {
+                if(response.body().getError().equals(false)){
+                    if(response.body().getDataKids().get(0).getPanic().equals("1")){
+                        Toast.makeText(ParentHomeActivity.this, "Please Happen :')", Toast.LENGTH_SHORT).show();
+                        giveNotification2("Anak anda menekan Panic Button di Latitude= "+response.body().getDataKids().get(0).getLatitude()+" Longitude " + response.body().getDataKids().get(0).getLongitude());
+                    }
+                }
+                else{
+                    Toast.makeText(ParentHomeActivity.this, "No data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Respond> call, Throwable t) {
+                Toast.makeText(ParentHomeActivity.this, "Gagal menghubungkan ke internet", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     private void startTimerThread() {
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -348,12 +351,14 @@ public class ParentHomeActivity extends AppCompatActivity
                 while (onScreen == 1) {
                     try {
                         Thread.sleep(1000);
+                        cekPanics();
                     }
                     catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     handler.post(new Runnable(){
                         public void run() {
+
                             SQLManager.openKC();
                             listKids = (ArrayList<Kids>) SQLManager.getDataKC();
                             SQLManager.closeKC();

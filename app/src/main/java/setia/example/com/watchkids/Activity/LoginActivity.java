@@ -95,9 +95,9 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.d("cobaGetText" ,etCode.getText().toString());
                                 Toast.makeText(getApplicationContext(), "Kode anak tidak ditemukan", Toast.LENGTH_LONG).show();
                             }else{
-//                                PreferenceManager.setId(response.body().getDataKids().get(0).getId());
-//                                PreferenceManager.setNama(response.body().getDataKids().get(0).getFirstName() + " " + (response.body().getDataKids().get(0).getLastName()));
-//                                PreferenceManager.setRole("kids");
+                                PreferenceManager.setId(response.body().getDataKids().get(0).getId());
+                                PreferenceManager.setNama(response.body().getDataKids().get(0).getFirstName() + " " + (response.body().getDataKids().get(0).getLastName()));
+                                PreferenceManager.setRole("kids");
                                 finish();
                                 startActivity(new Intent(getApplicationContext(), KidsHomeActivity.class));
 

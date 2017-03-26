@@ -32,8 +32,17 @@ public interface WatchAPI {
     @GET("getAturanByKidsId/{id}")
     Call<Respond> getLimitKids(@Path("id") String id);
 
+    @GET("panic/{id}")
+    Call<Respond> getPanic(@Path("id") String id);
+
+    @GET("getParentsLocationByKidsId/{id}")
+    Call<Respond> GetParentsLocation(@Path("id") String id);
+
     @GET("createAturan/{parent_id}/{kids_id}/{start_time}/{end_time}/{latitude}/{longitude}")
     Call<Respond> CreateLimit(@Path("parent_id") String parentId, @Path("kids_id") String kidsId, @Path("start_time") String startTime, @Path("end_time") String endTime, @Path("latitude") String latitude, @Path("longitude") String longitude);
+
+    @GET("createMessage/{kids_id}/{parent_id}/{message}/{time_created}")
+    Call<Respond> CreateMessage(@Path("kids_id") String kidsId, @Path("parent_id") String parentId, @Path("message") String message, @Path("time_created") String timeCreated);
 //    @GET("contacts.json")
 //    Call<List<Contact>> ContactsList();
 //
