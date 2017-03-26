@@ -75,11 +75,16 @@
         <service
             android:name=".Service.KidsGetParentService"
             android:exported="false" />
+
         <activity
             android:name=".KidsActivity.KidsHomeActivity"
             android:label="@string/title_activity_kids_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".KidsActivity.KidsMessageActivity"></activity>
+        <activity android:name=".KidsActivity.KidsMessageActivity" />
+        <activity
+            android:name=".ParentActivity.MessageActivity"
+            android:label="@string/title_activity_message"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

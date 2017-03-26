@@ -1,6 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
+    <LinearLayout
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="10dp"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/pesanan"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:textColor="#000000"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dari :"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:textColor="#000000"
+                    android:id="@+id/tv_anak"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="5 Kg(s)"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:textColor="#000000"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pesan"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:textColor="#000000"
+                    android:id="@+id/tv_pesan"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Jenis Laundry"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:textColor="#000000"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Status"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:textColor="#000000"
+                    android:id="@+id/tv_status_pesan"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="5 Kg(s)"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 </LinearLayout>

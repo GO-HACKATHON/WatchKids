@@ -26,6 +26,9 @@ public class Respond {
     @SerializedName("data_limit")
     @Expose
     private List<DataLimit> dataLimit = null;
+    @SerializedName("data_message")
+    @Expose
+    private List<DataMessage> dataMessage = null;
 
     public Boolean getError() {
         return error;
@@ -65,5 +68,13 @@ public class Respond {
 
     public void setDataLimit(List<DataLimit> dataLimit) {
         this.dataLimit = dataLimit;
+    }
+
+    public List<DataMessage> getDataMessage() {
+        return dataMessage;
+    }
+
+    public void setDataMessage(List<DataMessage> dataMessage) {
+        this.dataMessage = dataMessage;
     }
 }

@@ -9,6 +9,9 @@
             android:id="@+id/nav_put_limit"
             android:title="@string/nav_menu_put_limit" />
         <item
+            android:id="@+id/nav_message"
+            android:title="Lihat Pesan" />
+        <item
             android:id="@+id/nav_logout"
             android:title="@string/nav_menu_logout" />
     </group>

@@ -27,4 +27,5 @@
     <string name="title_activity_kids_home">KidsHomeActivity</string>
 
     <string name="kids_home_btn_panic">PANIC!</string>
+    <string name="title_activity_message">MessageActivity</string>
 </resources>

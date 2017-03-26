@@ -35,6 +35,9 @@ public interface WatchAPI {
     @GET("panic/{id}")
     Call<Respond> getPanic(@Path("id") String id);
 
+    @GET("getMessageByProfileId/{id}")
+    Call<Respond> GetMessageParent(@Path("id") String id);
+
     @GET("getParentsLocationByKidsId/{id}")
     Call<Respond> GetParentsLocation(@Path("id") String id);
 

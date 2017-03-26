@@ -264,6 +264,9 @@ public class ParentHomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_put_limit) {
             addLimitMode = 1;
             layoutPutLimit.setVisibility(View.VISIBLE);
+        } else if (id == R.id.nav_message) {
+            startActivity(new Intent(ParentHomeActivity.this, MessageActivity.class));
+            finish();
         } else if (id == R.id.nav_logout) {
             PreferenceManager.logout();
             startActivity(new Intent(ParentHomeActivity.this, LoginActivity.class));
@@ -326,7 +329,6 @@ public class ParentHomeActivity extends AppCompatActivity
             public void onResponse(Call<Respond> call, Response<Respond> response) {
                 if(response.body().getError().equals(false)){
                     if(response.body().getDataKids().get(0).getPanic().equals("1")){
-                        Toast.makeText(ParentHomeActivity.this, "Please Happen :')", Toast.LENGTH_SHORT).show();
                         giveNotification2("Anak anda menekan Panic Button di Latitude= "+response.body().getDataKids().get(0).getLatitude()+" Longitude " + response.body().getDataKids().get(0).getLongitude());
                     }
                 }
